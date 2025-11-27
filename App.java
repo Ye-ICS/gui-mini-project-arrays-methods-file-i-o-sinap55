@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,7 +24,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         // Create components to add.
-        VBox gameBox = new VBox();
+        HBox gameBox = new HBox();
         gameBox.setAlignment(Pos.CENTER);
         HBox aligner = new HBox();
         aligner.setAlignment(Pos.TOP_CENTER);
@@ -30,42 +32,63 @@ public class App extends Application {
         Label promptLabel = new Label();
         promptLabel.setText("SIMON");
 
-        Circle circle1 = new Circle(40); // radius
+        VBox list = new VBox();
 
-        Button RedBtn = new Button();
-        RedBtn.setShape(circle1);
-        RedBtn.setMinSize(80, 80); // ensure size fits the circle
-        RedBtn.setMaxSize(80, 80);
-        RedBtn.setAlignment(Pos.TOP_LEFT);
-        RedBtn.setStyle("-fx-background-color: red; -fx-text-fill: red;");
+         VBox list2 = new VBox();
 
+
+
+        Image blueBtnImage = new Image ("SimonColors/blue_button.png");
+        ImageView blueBtnImageView = new ImageView(blueBtnImage);
+
+        Image greenBtnImage = new Image ("SimonColors/green_button.png");
+        ImageView greenBtnImageView = new ImageView(greenBtnImage);
+
+        Image redBtnImage = new Image ("SimonColors/red_button.png");
+        ImageView redBtnImageView = new ImageView (redBtnImage);
+
+        Image yellowBtnImage = new Image ("SimonColors/yellow_button.png");
+        ImageView yellowBtnImageView = new ImageView (yellowBtnImage);
+
+
+        blueBtnImageView.setFitWidth(400);
+        greenBtnImageView.setFitWidth(400);
+        redBtnImageView.setFitWidth(400);
+        yellowBtnImageView.setFitWidth(400);
+
+        blueBtnImageView.setFitHeight(400);
+        greenBtnImageView.setFitHeight(400);
+        redBtnImageView.setFitHeight(400);
+        yellowBtnImageView.setFitHeight(400);
+
+        Button redBtn = new Button();
+        redBtn.setGraphic(redBtnImageView);
+        redBtn.setAlignment(Pos.TOP_LEFT);
 
         Button greenBtn = new Button();
-        greenBtn.setShape(circle1);
-       greenBtn.setMinSize(80, 80); // ensure size fits the circle
-        greenBtn.setMaxSize(80, 80);
-        greenBtn.setAlignment(Pos.TOP_LEFT);
-        greenBtn.setStyle("-fx-background-color: green; -fx-text-fill: green;");
+        greenBtn.setGraphic(greenBtnImageView);
+        greenBtn.setAlignment(Pos.TOP_RIGHT);
 
         Button yellowBtn = new Button();
-        
-        Circle circle2 = new Circle(40); // radius
+        yellowBtn.setGraphic(yellowBtnImageView);
+        yellowBtn.setAlignment(Pos.BOTTOM_LEFT);
 
-        yellowBtn.setShape(circle2);
-        yellowBtn.setMinSize(80, 80); // ensure size fits the circle
-        yellowBtn.setMaxSize(80, 80);
-        yellowBtn.setAlignment(Pos.TOP_RIGHT);
-        yellowBtn.setStyle("-fx-background-color: yellow; -fx-text-fill: yellow;");
+        Button blueBtn = new Button();
+        blueBtn.setGraphic(blueBtnImageView);
+        blueBtn.setAlignment(Pos.BOTTOM_RIGHT);
+
         // Set up reactions (aka callbacks).
 
 
         // Add components to the content box.
+        list.getChildren().addAll(redBtn, greenBtn);
+        list2.getChildren().addAll(blueBtn, yellowBtn);
         gameBox.getChildren().addAll(aligner);
-        aligner.getChildren().addAll(RedBtn,yellowBtn,greenBtn);
+        gameBox.getChildren().addAll(list, list2);
 
 
         // Set up the window and display it.
-        Scene scene = new Scene(gameBox, 300, 200);
+        Scene scene = new Scene(gameBox, 1000, 800);
         stage.setScene(scene);
         stage.setTitle("Simon");
         stage.show();
