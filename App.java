@@ -20,7 +20,7 @@ public class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     @Override
     public void start(Stage stage) {
         // Create components to add.
@@ -34,22 +34,19 @@ public class App extends Application {
 
         VBox list = new VBox();
 
-         VBox list2 = new VBox();
+        VBox list2 = new VBox();
 
-
-
-        Image blueBtnImage = new Image ("SimonColors/blue_button.png");
+        Image blueBtnImage = new Image("SimonColors/blue_button.png");
         ImageView blueBtnImageView = new ImageView(blueBtnImage);
 
-        Image greenBtnImage = new Image ("SimonColors/green_button.png");
+        Image greenBtnImage = new Image("SimonColors/green_button.png");
         ImageView greenBtnImageView = new ImageView(greenBtnImage);
 
-        Image redBtnImage = new Image ("SimonColors/red_button.png");
-        ImageView redBtnImageView = new ImageView (redBtnImage);
+        Image redBtnImage = new Image("SimonColors/red_button.png");
+        ImageView redBtnImageView = new ImageView(redBtnImage);
 
-        Image yellowBtnImage = new Image ("SimonColors/yellow_button.png");
-        ImageView yellowBtnImageView = new ImageView (yellowBtnImage);
-
+        Image yellowBtnImage = new Image("SimonColors/yellow_button.png");
+        ImageView yellowBtnImageView = new ImageView(yellowBtnImage);
 
         blueBtnImageView.setFitWidth(400);
         greenBtnImageView.setFitWidth(400);
@@ -79,13 +76,11 @@ public class App extends Application {
 
         // Set up reactions (aka callbacks).
 
-
         // Add components to the content box.
         list.getChildren().addAll(redBtn, greenBtn);
         list2.getChildren().addAll(blueBtn, yellowBtn);
         gameBox.getChildren().addAll(aligner);
         gameBox.getChildren().addAll(list, list2);
-
 
         // Set up the window and display it.
         Scene scene = new Scene(gameBox, 1000, 800);
@@ -93,6 +88,5 @@ public class App extends Application {
         stage.setTitle("Simon");
         stage.show();
     }
-
-
+    
 }
