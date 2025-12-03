@@ -5,7 +5,7 @@ public class Logic {
 
     public static void main(String[] args) throws InterruptedException {
         Scanner sc = new Scanner(System.in);
-        int[] colorgenerator = new int[5];
+        int[] colorgenerator = new int[20];
 
         // generate numbers 1–4, creates pattern
         for (int i = 0; i < colorgenerator.length; i++) {
@@ -30,7 +30,7 @@ public class Logic {
                 }
                 Thread.sleep(1000); // wait 1 second between colors
             }
-
+            System.out.print("\033[H\033[2J");
             System.out.println("Type the colors (red/blue/yellow/green):");
 
             // for loop to check user input (makes it into capitals)
