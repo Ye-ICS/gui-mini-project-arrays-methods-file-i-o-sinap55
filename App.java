@@ -1,3 +1,5 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,11 +14,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * Template JavaFX application.
  */
 public class App extends Application {
+    int score = 0;
     public static void main(String[] args) {
         launch(args);
     }
@@ -48,6 +52,8 @@ public class App extends Application {
         Image yellowBtnImage = new Image("SimonColors/yellow_button.png");
         ImageView yellowBtnImageView = new ImageView(yellowBtnImage);
 
+        Button startBtn = new Button();
+
         blueBtnImageView.setFitWidth(400);
         greenBtnImageView.setFitWidth(400);
         redBtnImageView.setFitWidth(400);
@@ -75,12 +81,14 @@ public class App extends Application {
         blueBtn.setAlignment(Pos.BOTTOM_RIGHT);
 
         // Set up reactions (aka callbacks).
+        startBtn.setOnAction(event -> onStartBtn());
 
         // Add components to the content box.
-        list.getChildren().addAll(redBtn, greenBtn);
+        list.getChildren().addAll(startBtn,redBtn, greenBtn);
         list2.getChildren().addAll(blueBtn, yellowBtn);
         gameBox.getChildren().addAll(aligner);
         gameBox.getChildren().addAll(list, list2);
+
 
         // Set up the window and display it.
         Scene scene = new Scene(gameBox, 1000, 800);
@@ -88,5 +96,13 @@ public class App extends Application {
         stage.setTitle("Simon");
         stage.show();
     }
-    
+
+    void onStartBtn() {
+        KeyFrame scheduledTask = new KeyFrame(Duration.seconds(1), event -> {
+            System.out.println("Hi");
+        });
+        Timeline timeline = new Timeline(scheduledTask);
+        timeline.setCycleCount(10);
+        timeline.play();
+    }
 }
