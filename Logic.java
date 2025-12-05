@@ -26,7 +26,7 @@ public class Logic {
                 } else if (colorgenerator[i] == 3) {
                     System.out.println("YELLOW");
                 } else if (colorgenerator[i] == 4) {
-                    System.out.println("GREEN");
+                    System.out.println("GREEN");      
                 }
                 Thread.sleep(1000); // wait 1 second between colors
             }

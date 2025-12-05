@@ -6,10 +6,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Logic",
+            "request": "launch",
+            "mainClass": "Logic",
+            "projectName": "gui-mini-project-arrays-methods-file-i-o-sinap55_346c403b"
+        },
+        {
+            "type": "java",
             "name": "App",
             "request": "launch",
-            "mainClass": "App",    // Change this to match class containing main method
-            "vmArgs": "--module-path \"c:\\Users\\parvanehs\\OneDrive - Limestone DSB\\Grade 11 CS\\lib\\javafx-sdk-21.0.9\\lib\" --add-modules javafx.controls,javafx.fxml" // Change this to match your JavaFX lib path
+            "mainClass": "App",
+            "vmArgs": "--module-path \"c:\\Users\\parvanehs\\OneDrive - Limestone DSB\\Grade 11 CS\\lib\\javafx-sdk-21.0.9\\lib\" --add-modules javafx.controls,javafx.fxml"
         }
     ]
 }

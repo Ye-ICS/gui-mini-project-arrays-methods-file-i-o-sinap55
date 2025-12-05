@@ -5,22 +5,28 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Template JavaFX application.
- */
 public class App extends Application {
     int score = 0;
+    int[] colorgenerator = new int[20];
+    int currentStage = 1;
+    int userInputCount = 0;
+    boolean canClick = false;
+    
+    // Button references
+    Button redBtn;
+    Button greenBtn;
+    Button yellowBtn;
+    Button blueBtn;
+    Label promptLabel;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -33,13 +39,13 @@ public class App extends Application {
         HBox aligner = new HBox();
         aligner.setAlignment(Pos.TOP_CENTER);
 
-        Label promptLabel = new Label();
+        promptLabel = new Label();
         promptLabel.setText("SIMON");
 
         VBox list = new VBox();
-
         VBox list2 = new VBox();
 
+        //button setup
         Image blueBtnImage = new Image("SimonColors/blue_button.png");
         ImageView blueBtnImageView = new ImageView(blueBtnImage);
 
@@ -64,45 +70,122 @@ public class App extends Application {
         redBtnImageView.setFitHeight(400);
         yellowBtnImageView.setFitHeight(400);
 
-        Button redBtn = new Button();
+        redBtn = new Button();
         redBtn.setGraphic(redBtnImageView);
         redBtn.setAlignment(Pos.TOP_LEFT);
 
-        Button greenBtn = new Button();
+        greenBtn = new Button();
         greenBtn.setGraphic(greenBtnImageView);
         greenBtn.setAlignment(Pos.TOP_RIGHT);
 
-        Button yellowBtn = new Button();
+        yellowBtn = new Button();
         yellowBtn.setGraphic(yellowBtnImageView);
         yellowBtn.setAlignment(Pos.BOTTOM_LEFT);
 
-        Button blueBtn = new Button();
+        blueBtn = new Button();
         blueBtn.setGraphic(blueBtnImageView);
         blueBtn.setAlignment(Pos.BOTTOM_RIGHT);
 
-        // Set up reactions (aka callbacks).
+        // Set up events
+        startBtn.setText("Start Game");
         startBtn.setOnAction(event -> onStartBtn());
+        
+        
+        redBtn.setOnAction(event -> onColorButtonClick(1));
+        greenBtn.setOnAction(event -> onColorButtonClick(4));
+        yellowBtn.setOnAction(event -> onColorButtonClick(3));
+        blueBtn.setOnAction(event -> onColorButtonClick(2));
 
         // Add components to the content box.
-        list.getChildren().addAll(startBtn,redBtn, greenBtn);
+        list.getChildren().addAll(startBtn, redBtn, greenBtn);
         list2.getChildren().addAll(blueBtn, yellowBtn);
         gameBox.getChildren().addAll(aligner);
         gameBox.getChildren().addAll(list, list2);
 
-
-        // Set up the window and display it.
+        // Set up window
         Scene scene = new Scene(gameBox, 1000, 800);
         stage.setScene(scene);
         stage.setTitle("Simon");
         stage.show();
     }
 
+    // Generate random color pattern
+    void generatePattern() {
+        for (int i = 0; i < colorgenerator.length; i++) {
+            colorgenerator[i] = ThreadLocalRandom.current().nextInt(1, 5);
+        }
+    }
+
+    // Start the game
     void onStartBtn() {
-        KeyFrame scheduledTask = new KeyFrame(Duration.seconds(1), event -> {
-            System.out.println("Hi");
-        });
-        Timeline timeline = new Timeline(scheduledTask);
-        timeline.setCycleCount(10);
-        timeline.play();
+        generatePattern();
+        currentStage = 1;
+        userInputCount = 0;
+        promptLabel.setText("Round 1");
+        showSequence();
+    }
+
+    // Flash a button based on what color it is
+    void flashButton(int colorCode) {
+        if (colorCode == 1) {
+            redBtn.setStyle("-fx-opacity: 0.5;");
+            new Timeline(new KeyFrame(Duration.millis(500), e -> redBtn.setStyle("-fx-opacity: 1;"))).play();
+        } else if (colorCode == 2) {
+            blueBtn.setStyle("-fx-opacity: 0.5;");
+            new Timeline(new KeyFrame(Duration.millis(500), e -> blueBtn.setStyle("-fx-opacity: 1;"))).play();
+        } else if (colorCode == 3) {
+            yellowBtn.setStyle("-fx-opacity: 0.5;");
+            new Timeline(new KeyFrame(Duration.millis(500), e -> yellowBtn.setStyle("-fx-opacity:  1;"))).play();
+        } else if (colorCode == 4) {
+            greenBtn.setStyle("-fx-opacity: 0.5;");
+            new Timeline(new KeyFrame(Duration.millis(500), e -> greenBtn.setStyle("-fx-opacity: 1;"))).play();
+        }
+    }
+
+    // Handle color button clicks
+    void onColorButtonClick(int colorCode) {
+        if (!canClick) {
+            return;  // Exit if can't click
+        }
+        
+        if (colorgenerator[userInputCount] == colorCode) {
+            promptLabel.setText("Good!");
+            userInputCount++;
+            
+            if (userInputCount == currentStage) {
+                currentStage++;
+                canClick = false;
+                promptLabel.setText("Round " + currentStage);
+                new Timeline(new KeyFrame(Duration.seconds(1.5), event -> showSequence())).play();
+            }
+        } else {
+            promptLabel.setText("You Lose!");
+            canClick = false;
+        }
+    }
+
+    // Show the sequence for current stage
+    void showSequence() {
+        if (currentStage > 20) {
+            promptLabel.setText("You Win!");
+            return;
+        }
+        
+        canClick = false;
+        promptLabel.setText("Watch!");
+        
+        // Flash buttons with delays
+        for (int i = 0; i < currentStage; i++) {
+            int delay = i + 1;
+            int color = colorgenerator[i];
+            new Timeline(new KeyFrame(Duration.seconds(delay), event -> flashButton(color))).play();
+        }
+        
+        // Allow clicking after sequence
+        new Timeline(new KeyFrame(Duration.seconds(currentStage + 1), event -> {
+            canClick = true;
+            promptLabel.setText("Your turn!");
+            userInputCount = 0;
+        })).play();
     }
 }
