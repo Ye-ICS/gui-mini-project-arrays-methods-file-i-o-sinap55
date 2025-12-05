@@ -11,7 +11,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
 
 public class App extends Application {
     int score = 0;
@@ -32,7 +39,7 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws FileNotFoundException{
         // Create components to add.
         HBox gameBox = new HBox();
         gameBox.setAlignment(Pos.CENTER);
@@ -92,11 +99,15 @@ public class App extends Application {
         startBtn.setText("Start Game");
         startBtn.setOnAction(event -> onStartBtn());
         
-        
+        try {
         redBtn.setOnAction(event -> onColorButtonClick(1));
         greenBtn.setOnAction(event -> onColorButtonClick(4));
         yellowBtn.setOnAction(event -> onColorButtonClick(3));
         blueBtn.setOnAction(event -> onColorButtonClick(2));
+        } catch (FileNotFoundException exception) 
+        
+        
+        
 
         // Add components to the content box.
         redGreenContainer.getChildren().addAll(redBtn, greenBtn);
@@ -110,6 +121,9 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Simon");
         stage.show();
+
+
+        
     }
 
     // Generate random color pattern
@@ -146,7 +160,7 @@ public class App extends Application {
     }
 
     // Handle color button clicks
-    void onColorButtonClick(int colorCode) {
+    void onColorButtonClick(int colorCode) throws FileNotFoundException{
         if (!canClick) {
             return;  // Exit if can't click
         }
@@ -160,6 +174,7 @@ public class App extends Application {
                 canClick = false;
                 promptLabel.setText("Round " + currentStage);
                 new Timeline(new KeyFrame(Duration.seconds(1.5), event -> showSequence())).play();
+                highScorePrinterAndReader();
             }
         } else {
             promptLabel.setText("You Lose!");
@@ -190,5 +205,23 @@ public class App extends Application {
             promptLabel.setText("Your turn!");
             userInputCount = 0;
         })).play();
+    }
+
+    void highScorePrinterAndReader() throws FileNotFoundException{
+        File highscoreReader = new File("highscore.txt") ;
+        
+        Scanner sc = new Scanner(highscoreReader);
+        while (sc.hasNext()) {
+            String score = sc.nextLine();
+        }
+        try {
+            PrintWriter highscoreWriter = new PrintWriter("highscore.txt");
+            highscoreWriter.print(currentStage);
+            highscoreWriter.close();
+        } catch(IOException ioe) {
+
+        }
+            
+        
     }
 }
