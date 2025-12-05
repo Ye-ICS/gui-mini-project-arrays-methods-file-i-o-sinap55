@@ -38,12 +38,14 @@ public class App extends Application {
         gameBox.setAlignment(Pos.CENTER);
         HBox aligner = new HBox();
         aligner.setAlignment(Pos.TOP_CENTER);
+        VBox contextBox = new VBox();
+        contextBox.setAlignment(Pos.CENTER);
 
         promptLabel = new Label();
         promptLabel.setText("SIMON");
 
-        VBox list = new VBox();
-        VBox list2 = new VBox();
+        VBox redGreenContainer = new VBox();
+        VBox blueYellowContainer = new VBox();
 
         //button setup
         Image blueBtnImage = new Image("SimonColors/blue_button.png");
@@ -60,15 +62,15 @@ public class App extends Application {
 
         Button startBtn = new Button();
 
-        blueBtnImageView.setFitWidth(400);
-        greenBtnImageView.setFitWidth(400);
-        redBtnImageView.setFitWidth(400);
-        yellowBtnImageView.setFitWidth(400);
+        blueBtnImageView.setFitWidth(200);
+        greenBtnImageView.setFitWidth(200);
+        redBtnImageView.setFitWidth(200);
+        yellowBtnImageView.setFitWidth(200);
 
-        blueBtnImageView.setFitHeight(400);
-        greenBtnImageView.setFitHeight(400);
-        redBtnImageView.setFitHeight(400);
-        yellowBtnImageView.setFitHeight(400);
+        blueBtnImageView.setFitHeight(200);
+        greenBtnImageView.setFitHeight(200);
+        redBtnImageView.setFitHeight(200);
+        yellowBtnImageView.setFitHeight(200);
 
         redBtn = new Button();
         redBtn.setGraphic(redBtnImageView);
@@ -97,13 +99,14 @@ public class App extends Application {
         blueBtn.setOnAction(event -> onColorButtonClick(2));
 
         // Add components to the content box.
-        list.getChildren().addAll(startBtn, redBtn, greenBtn);
-        list2.getChildren().addAll(blueBtn, yellowBtn);
-        gameBox.getChildren().addAll(aligner);
-        gameBox.getChildren().addAll(list, list2);
+        redGreenContainer.getChildren().addAll(redBtn, greenBtn);
+        blueYellowContainer.getChildren().addAll(blueBtn, yellowBtn);
+        gameBox.getChildren().addAll(aligner,redGreenContainer, blueYellowContainer);
+        contextBox.getChildren().addAll(gameBox,startBtn,promptLabel);
 
+        
         // Set up window
-        Scene scene = new Scene(gameBox, 1000, 800);
+        Scene scene = new Scene(contextBox, 400, 450);
         stage.setScene(scene);
         stage.setTitle("Simon");
         stage.show();
@@ -129,16 +132,16 @@ public class App extends Application {
     void flashButton(int colorCode) {
         if (colorCode == 1) {
             redBtn.setStyle("-fx-opacity: 0.5;");
-            new Timeline(new KeyFrame(Duration.millis(500), e -> redBtn.setStyle("-fx-opacity: 1;"))).play();
+            new Timeline(new KeyFrame(Duration.millis(500), event -> redBtn.setStyle("-fx-opacity: 1;"))).play();
         } else if (colorCode == 2) {
             blueBtn.setStyle("-fx-opacity: 0.5;");
-            new Timeline(new KeyFrame(Duration.millis(500), e -> blueBtn.setStyle("-fx-opacity: 1;"))).play();
+            new Timeline(new KeyFrame(Duration.millis(500), event -> blueBtn.setStyle("-fx-opacity: 1;"))).play();
         } else if (colorCode == 3) {
             yellowBtn.setStyle("-fx-opacity: 0.5;");
-            new Timeline(new KeyFrame(Duration.millis(500), e -> yellowBtn.setStyle("-fx-opacity:  1;"))).play();
+            new Timeline(new KeyFrame(Duration.millis(500), event -> yellowBtn.setStyle("-fx-opacity: 1;"))).play();
         } else if (colorCode == 4) {
             greenBtn.setStyle("-fx-opacity: 0.5;");
-            new Timeline(new KeyFrame(Duration.millis(500), e -> greenBtn.setStyle("-fx-opacity: 1;"))).play();
+            new Timeline(new KeyFrame(Duration.millis(500), event -> greenBtn.setStyle("-fx-opacity: 1;"))).play();
         }
     }
 
@@ -164,7 +167,7 @@ public class App extends Application {
         }
     }
 
-    // Show the sequence for current stage
+    // Show the sequence for current stage + win
     void showSequence() {
         if (currentStage > 20) {
             promptLabel.setText("You Win!");
