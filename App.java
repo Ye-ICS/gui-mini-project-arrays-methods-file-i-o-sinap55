@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -25,12 +26,13 @@ public class App extends Application {
     int userInputCount = 0;
     boolean canClick = false;
     
-    // Button 
+    // Button references
     Button redBtn;
     Button greenBtn;
     Button yellowBtn;
     Button blueBtn;
     Label promptLabel;
+    TextField highScoreBox;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,6 +50,10 @@ public class App extends Application {
 
         promptLabel = new Label();
         promptLabel.setText("SIMON");
+
+        highScoreBox = new TextField();
+        highScoreBox.setEditable(false); // make it read only   
+        highScoreBox.setText(String.valueOf(readHighScore()));
 
         VBox redGreenContainer = new VBox();
         VBox blueYellowContainer = new VBox();
@@ -108,13 +114,27 @@ public class App extends Application {
         redGreenContainer.getChildren().addAll(redBtn, greenBtn);
         blueYellowContainer.getChildren().addAll(blueBtn, yellowBtn);
         gameBox.getChildren().addAll(aligner,redGreenContainer, blueYellowContainer);
-        contextBox.getChildren().addAll(gameBox,startBtn,promptLabel);
+        contextBox.getChildren().addAll(gameBox, promptLabel, highScoreBox, startBtn);
 
         // Set up window
         Scene scene = new Scene(contextBox, 400, 450);
         stage.setScene(scene);
         stage.setTitle("Simon");
         stage.show();
+    }
+
+
+    // reader for the high score
+    int readHighScore() {
+        try (Scanner sc = new Scanner(new File("highscore.txt"))) {
+            if (sc.hasNextLine()) {
+                String currentHigh = sc.nextLine();
+                return Integer.parseInt(currentHigh);
+            }
+        } catch (FileNotFoundException event) { 
+            return 0; // if  nothing found return 0
+        }
+        return 0;
     }
 
     // Generate random color pattern
@@ -224,9 +244,14 @@ public class App extends Application {
         if (scoreToWrite > existingHigh) {
             try (PrintWriter pw = new PrintWriter(new File("highscore.txt"))) {
                 pw.print(scoreToWrite);
+                // update the UI box
+                highScoreBox.setText(String.valueOf(scoreToWrite));
             } catch (FileNotFoundException ex) {
-                
+                // cannot write file
             }
+        } else {
+            // ensure UI shows current stored high score
+            highScoreBox.setText(String.valueOf(existingHigh));
         }
     }
 }
