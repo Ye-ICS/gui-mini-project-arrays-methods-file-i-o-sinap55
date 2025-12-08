@@ -53,7 +53,7 @@ public class App extends Application {
 
         highScoreBox = new TextField();
         highScoreBox.setEditable(false); // make it read only   
-        highScoreBox.setText(String.valueOf(readHighScore()));
+        highScoreBox.setText(("HIGHSCORE: ") + String.valueOf(readHighScore()));
 
         VBox redGreenContainer = new VBox();
         VBox blueYellowContainer = new VBox();
@@ -226,18 +226,6 @@ public class App extends Application {
     void highScorePrinterAndReader() {
         int existingHigh = 0;
 
-        try (Scanner sc = new Scanner(new File("highscore.txt"))) {
-            if (sc.hasNextLine()) {
-                String line = sc.nextLine().trim();
-                try {
-                    existingHigh = Integer.parseInt(line);
-                } catch (NumberFormatException ex) {
-                    existingHigh = 0;
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            // file not found -> existingHigh remains 0
-        }
 
         int scoreToWrite = currentStage - 1;
 
