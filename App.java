@@ -235,7 +235,7 @@ public class App extends Application {
             }
         } else {
             // ensure UI shows current stored high score
-            highScoreBox.setText(String.valueOf(readHighScore()));
+            highScoreBox.setText(("HIGHSCORE: ") + String.valueOf(readHighScore()));
         }
     }
 }
