@@ -221,11 +221,11 @@ public class App extends Application {
     }
 
     void highScorePrinter() {
-        int existingHigh = 0;
+        readHighScore();
 
         int scoreToWrite = currentStage - 1;
 
-        if (scoreToWrite > existingHigh) {
+        if (scoreToWrite > Integer.valueOf(readHighScore())) {
             try (PrintWriter pw = new PrintWriter(new File("highscore.txt"))) {
                 pw.print(scoreToWrite);
                 // update the UI box
@@ -235,7 +235,7 @@ public class App extends Application {
             }
         } else {
             // ensure UI shows current stored high score
-            highScoreBox.setText(String.valueOf(existingHigh));
+            highScoreBox.setText(String.valueOf(readHighScore()));
         }
     }
 }
