@@ -25,7 +25,7 @@ public class App extends Application {
     int currentStage = 1;
     int userInputCount = 0;
     boolean canClick = false;
-    
+
     // Button references
     Button redBtn;
     Button greenBtn;
@@ -52,13 +52,13 @@ public class App extends Application {
         promptLabel.setText("SIMON");
 
         highScoreBox = new TextField();
-        highScoreBox.setEditable(false); // make it read only   
+        highScoreBox.setEditable(false); // make it read only
         highScoreBox.setText(("HIGHSCORE: ") + String.valueOf(readHighScore()));
 
         VBox redGreenContainer = new VBox();
         VBox blueYellowContainer = new VBox();
 
-        //button setup
+        // button setup
         Image blueBtnImage = new Image("SimonColors/blue_button.png");
         ImageView blueBtnImageView = new ImageView(blueBtnImage);
 
@@ -102,18 +102,16 @@ public class App extends Application {
         // Set up events
         startBtn.setText("Start Game");
         startBtn.setOnAction(event -> onStartBtn());
-        
+
         redBtn.setOnAction(event -> onColorButtonClick(1));
         blueBtn.setOnAction(event -> onColorButtonClick(2));
         yellowBtn.setOnAction(event -> onColorButtonClick(3));
         greenBtn.setOnAction(event -> onColorButtonClick(4));
-        
-        
 
         // Add components to the content box.
         redGreenContainer.getChildren().addAll(redBtn, greenBtn);
         blueYellowContainer.getChildren().addAll(blueBtn, yellowBtn);
-        gameBox.getChildren().addAll(aligner,redGreenContainer, blueYellowContainer);
+        gameBox.getChildren().addAll(aligner, redGreenContainer, blueYellowContainer);
         contextBox.getChildren().addAll(gameBox, promptLabel, highScoreBox, startBtn);
 
         // Set up window
@@ -121,20 +119,6 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Simon");
         stage.show();
-    }
-
-
-    // reader for the high score
-    int readHighScore() {
-        try (Scanner sc = new Scanner(new File("highscore.txt"))) {
-            if (sc.hasNextLine()) {
-                String currentHigh = sc.nextLine();
-                return Integer.parseInt(currentHigh);
-            }
-        } catch (FileNotFoundException event) { 
-            return 0; // if  nothing found return 0
-        }
-        return 0;
     }
 
     // Generate random color pattern
@@ -171,28 +155,28 @@ public class App extends Application {
     }
 
     // Handle color button clicks
-    void onColorButtonClick(int colorCode){
+    void onColorButtonClick(int colorCode) {
         if (!canClick) {
-            return;  // Exit if can't click
+            return; // Exit if can't click
         }
-        
+
         if (colorgenerator[userInputCount] == colorCode) {
             promptLabel.setText("Good!");
             userInputCount++;
-            
+
             if (userInputCount == currentStage) {
                 currentStage++;
                 canClick = false;
                 promptLabel.setText("Round " + currentStage);
                 // save high score after completing a round
-                highScorePrinterAndReader();
+                highScorePrinter();
                 new Timeline(new KeyFrame(Duration.seconds(1.5), event -> showSequence())).play();
             }
         } else {
             promptLabel.setText("You Lose!");
             canClick = false;
             // save high score when losing
-            highScorePrinterAndReader();
+            highScorePrinter();
         }
     }
 
@@ -201,20 +185,20 @@ public class App extends Application {
         if (currentStage > colorgenerator.length) {
             promptLabel.setText("You Win!");
             // save high score on full win
-            highScorePrinterAndReader();
+            highScorePrinter();
             return;
         }
-        
+
         canClick = false;
         promptLabel.setText("Watch!");
-        
+
         // Flash buttons with delays
         for (int i = 0; i < currentStage; i++) {
             int delay = i + 1;
             int color = colorgenerator[i];
             new Timeline(new KeyFrame(Duration.seconds(delay), event -> flashButton(color))).play();
         }
-        
+
         // Allow clicking after sequence
         new Timeline(new KeyFrame(Duration.seconds(currentStage + 1), event -> {
             canClick = true;
@@ -223,9 +207,21 @@ public class App extends Application {
         })).play();
     }
 
-    void highScorePrinterAndReader() {
-        int existingHigh = 0;
+    // reader for the high score
+    int readHighScore() {
+        try (Scanner sc = new Scanner(new File("highscore.txt"))) {
+            if (sc.hasNextLine()) {
+                String currentHigh = sc.nextLine();
+                return Integer.parseInt(currentHigh);
+            }
+        } catch (FileNotFoundException event) {
+            return 0; // if nothing found return 0
+        }
+        return 0;
+    }
 
+    void highScorePrinter() {
+        int existingHigh = 0;
 
         int scoreToWrite = currentStage - 1;
 
@@ -233,9 +229,9 @@ public class App extends Application {
             try (PrintWriter pw = new PrintWriter(new File("highscore.txt"))) {
                 pw.print(scoreToWrite);
                 // update the UI box
-                highScoreBox.setText(String.valueOf(scoreToWrite));
+                highScoreBox.setText(("HIGHSCORE: ") + String.valueOf(scoreToWrite));
             } catch (FileNotFoundException ex) {
-                // cannot write file
+                System.out.println("Cannot find file");
             }
         } else {
             // ensure UI shows current stored high score
